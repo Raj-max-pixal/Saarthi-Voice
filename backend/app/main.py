@@ -20,14 +20,15 @@ async def health():
 
 @app.post("/api/v1/voice-turn", response_model=TurnResponse)
 async def voice_turn(audio: UploadFile = File(...), session_id: str = Form(..., min_length=8, max_length=128), language_code: str = Form("indic-auto")):
-    if audio.content_type not in ALLOWED_TYPES:
+    content_type = (audio.content_type or "").split(";", 1)[0].lower()
+    if content_type not in ALLOWED_TYPES:
         raise HTTPException(415, "Use WAV, MP3, M4A, OGG, or WebM audio.")
     audio_bytes = await audio.read()
     if not audio_bytes or len(audio_bytes) > MAX_AUDIO_BYTES:
         raise HTTPException(413, "Audio must be under 8 MB. Keep it below 30 seconds.")
     try:
         gnani = GnaniClient(settings)
-        transcript, detected_language, request_id = await gnani.transcribe(audio_bytes, audio.filename or "recording.webm", audio.content_type, language_code)
+        transcript, detected_language, request_id = await gnani.transcribe(audio_bytes, audio.filename or "recording.wav", content_type, language_code)
         if settings.evon_base_url:
             answer = await EvonClient(settings).respond(transcript, histories[session_id])
             response_engine = "Evon 30B"
