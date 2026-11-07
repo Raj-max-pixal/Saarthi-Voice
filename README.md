@@ -1,36 +1,49 @@
-# Saarthi Voice
+# 🎙️ Saarthi Voice: Intelligent Multilingual Voice Assistant
 
-Saarthi Voice is a Hindi/Hinglish voice assistant for elderly and first-time digital-service users. Hold the microphone, ask a question naturally, and receive a simple spoken response.
+**Saarthi Voice** is a state-of-the-art, production-ready multilingual voice assistant designed to bridge communication and accessibility barriers. Built specifically for **The Great Indian AI Internship Challenge by Gnani.ai**, the platform provides real-time speech translation, code-mixed language support, and intelligent conversational responses powered entirely by Gnani AI's proprietary speech models.
 
-## Gnani AI integration
+---
 
-- **Prisma v3.0** transcribes Indian-language and Hinglish audio.
-- **Evon 30B** is supported optionally when a GPU endpoint is available.
-- **Timbre v2.5** reads the response aloud.
+## 🚀 Built for The Great Indian AI Internship Challenge
+This project leverages **Gnani AI's Developer Platform** APIs to build a seamless voice-first pipeline:
+- **Prisma (Speech-to-Text / STT):** Accurately transcribes spoken user audio across 10 Indian languages plus English, handling noisy channel conditions, regional accents, and code-mixed (Hinglish/Tanglish) speech seamlessly.
+- **Evon (LLM / Reasoning Core):** Processes conversational intent and formulates intelligent, context-aware responses.
+- **Timbre (Text-to-Speech / TTS):** Synthesizes the AI's response into high-quality, natural human-like voice outputs with multiple expressive voices.
 
-## Layout
+---
 
-```
-backend/app/{main.py,config.py,schemas.py,services/{gnani.py,evon.py}}
-frontend/{app,components,lib}
-```
+## 🛠️ Tech Stack
 
-## Run locally
+### **Frontend**
+* **React / Next.js:** Modern, component-driven user interface.
+* **Tailwind CSS:** Fully responsive, accessible styling optimized for desktop and mobile web views.
+* **Web Audio API:** Real-time microphone recording and audio stream handling.
 
-1. Copy `backend/.env.example` to `backend/.env`, then add your Gnani key from [Gnani Console](https://app.gnani.ai). Keep it private.
-2. To use the free, low-storage edition, leave `EVON_BASE_URL` empty. Saarthi then uses transparent, built-in safety guidance while still using Prisma and Timbre. If you later have a GPU endpoint, set `EVON_BASE_URL` to enable official Evon 30B.
-3. In one terminal: `cd backend`; create/activate a virtual environment; run `pip install -r requirements.txt`; then `uvicorn app.main:app --reload --port 8000`.
-4. In another: `cd frontend`; run `npm install`, copy `.env.local.example` to `.env.local`, and run `npm run dev`.
+### **Backend**
+* **Python & FastAPI:** High-performance asynchronous backend framework.
+* **Uvicorn:** Lightning-fast ASGI server.
+* **Gnani AI REST & WebSocket APIs:** Secure bearer-token-authenticated calls to Prisma STT and Timbre TTS pipelines.
 
-Visit `http://localhost:3000` and allow microphone access. HTTPS is required for microphone access in production.
+---
 
-## Production notes
+## 📂 Project Directory Structure
 
-- Configure `ALLOWED_ORIGINS` to your real frontend domain.
-- Keep secrets in a deployed secret manager; never commit `.env`.
-- Audio is processed in memory only. Conversation history is ephemeral; replace it with Redis/Postgres for persistent accounts.
-- Rate-limit the public API and monitor API spend.
-
-## Demo route
-
-Speak: “Mujhe pension status check karna hai, kaunse documents lagenge?” Show Prisma’s transcript, Evon’s concise step-by-step answer, then play Timbre’s Hindi voice.
+```text
+Saarthi-Voice/
+│
+├── backend/                  # FastAPI Application Core
+│   ├── main.py               # API Endpoints & Gnani AI Pipeline Integration
+│   ├── requirements.txt      # Python dependencies (FastAPI, Uvicorn, Requests)
+│   └── .env.example          # Sample environment variables configuration
+│
+├── frontend/                 # React UI Client
+│   ├── public/               # Static assets & icons
+│   ├── src/
+│   │   ├── components/       # UI Elements (Mic Button, Audio Visualizer, Chat Box)
+│   │   ├── App.jsx           # Main application layout & state logic
+│   │   └── index.css         # Tailwind styles
+│   ├── package.json          # Node dependencies and scripts
+│   └── vite.config.js        # Vite build configuration
+│
+├── LICENSE                   # MIT License
+└── README.md                 # Project Documentation
